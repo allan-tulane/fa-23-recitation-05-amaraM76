@@ -21,6 +21,7 @@ def get_frequencies(fname):
         C.update(Counter(l))
     return(dict(C.most_common()))
 
+
 # given a dictionary f mapping characters to frequencies, 
 # create a prefix code tree using Huffman's algorithm
 def make_huffman_tree(f):
@@ -37,9 +38,7 @@ def make_huffman_tree(f):
         x = p.get()
         y = p.get()
         z = TreeNode(x, y, (x.data[0] + y.data[0], ""))
-        p.put(z)
-        # TODO
-        
+        p.put(z)   
     # return root of the tree
     return p.get()
 
@@ -58,8 +57,8 @@ def get_code(node, prefix="", code={}):
 # given an alphabet and frequencies, compute the cost of a fixed length encoding
 def fixed_length_cost(f):
     cost = 0
-    for f_value in f.items():
-        cost += f_value * 8
+    for character, frequency in f.items():
+        cost += frequency * 8
     return cost
     # TODO
     pass
@@ -67,8 +66,8 @@ def fixed_length_cost(f):
 # given a Huffman encoding and character frequencies, compute cost of a Huffman encoding
 def huffman_cost(C, f):
     cost = 0
-    for char, f_value in f.items():
-        cost += f_value * len(C[char])  
+    for character, frequency in f.items():
+        cost += frequency * len(C[character])  
     return cost
     # TODO
     pass
@@ -78,3 +77,22 @@ print("Fixed-length cost:  %d" % fixed_length_cost(f))
 T = make_huffman_tree(f)
 C = get_code(T)
 print("Huffman cost:  %d" % huffman_cost(C, f))
+
+
+
+#f = get_frequencies('f1.txt')
+#f = get_frequencies('alice29.txt')
+#f = get_frequencies('asyoulik.txt')
+#f = get_frequencies('fields.c')
+f = get_frequencies('grammar.lsp')
+
+fixed_length_coding = fixed_length_cost(f)
+print("Fixed-length cost:  %d" % fixed_length_cost(f))
+
+T = make_huffman_tree(f)
+C = get_code(T)
+huffman_coding = huffman_cost(C,f)
+print("Huffman cost:  %d" % huffman_cost(C, f))
+
+ratio = huffman_coding / fixed_length_coding
+print("ratio cost:" ,ratio)
